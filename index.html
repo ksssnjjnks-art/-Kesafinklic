@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kesafin Кликер</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .clicker-container {
+            position: relative;
+            margin: 20px 0;
+        }
+        
+        .clicker {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(145deg, #ffd700, #ffaa00);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: transform 0.1s;
+            border: 8px solid #ffcc00;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .clicker:active {
+            transform: scale(0.95);
+        }
+        
+        .click-text {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 10px;
+            color: #8B6914;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+        }
+        
+        .click-animation {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: clickEffect 0.5s ease-out forwards;
+        }
+        
+        @keyframes clickEffect {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+        
+        .upgrades {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 30px;
+        }
+        
+        .upgrade-title {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }background: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .upgrade-item:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+        
+        .upgrade-item:active {
+            transform: translateY(1px);
+        }
+        
+        .upgrade-info {
+            flex: 1;
+        }
+        
+        .upgrade-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .upgrade-description {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .upgrade-cost {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: #ffd700;
+        }
+        
+        .upgrade-level {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-left: 10px;
+        }
+        
+        .coin-animation {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%23FFD700" stroke="%23FFAA00" stroke-width="2"/><text x="32" y="38" font-family="Arial" font-size="14" font-weight="bold" fill="%23B8860B" text-anchor="middle">K</text></svg>') no-repeat center;
+            background-size: contain;
+            pointer-events: none;
+            animation: coinFloat 1.5s ease-out forwards;
+        }
+        
+        @keyframes coinFloat {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(0.5);
+                opacity: 0;
+            }
+        }
+        
+        .disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .disabled:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: none;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #4e54c8, #8f94fb);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transform: translateX(150%);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            max-width: 300px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.hide {
+            transform: translateX(150%);
+        }
+        
+        .notification-icon {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="title">Kesafin</h1>
+        <p>Кликер с улучшениями</p>
+    </div>
+    
+    <div class="stats">
+        <div class="stat-item">
+            <div class="stat-value" id="coins">0</div>
+            <div class="stat-label">Монеты</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="coins-per-click">1</div>
+            <div class="stat-label">За клик</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="coins-per-second">0</div>
+            <div class="stat-label">В секунду</div>
+        </div>
+    </div>
+    
+    <div class="clicker-container"><div class="clicker" id="clicker">
+            <span>K</span>
+            <div class="click-text">Кликай!</div>
+        </div>
+    </div>
+    
+    <div class="upgrades">
+        <h2 class="upgrade-title">Улучшения</h2>
+        <div class="upgrade-item" id="upgrade-click">
+            <div class="upgrade-info">
+                <div class="upgrade-name">Усиленный клик</div>
+                <div class="upgrade-description">Увеличивает количество монет за клик</div>
+            </div>
+            <div>
+                <span class="upgrade-cost">10</span>
+                <span class="upgrade-level">Ур. 0</span>
+            </div>
+        </div>
+        
+        <div class="upgrade-item" id="upgrade-auto">
+            <div class="upgrade-info">
+                <div class="upgrade-name">Авто-кликер</div>
+                <div class="upgrade-description">Автоматически генерирует монеты</div>
+            </div>
+            <div>
+                <span class="upgrade-cost">50</span>
+                <span class="upgrade-level">Ур. 0</span>
+            </div>
+        </div>
+        
+        <div class="upgrade-item" id="upgrade-multiplier">
+            <div class="upgrade-info">
+                <div class="upgrade-name">Множитель</div>
+                <div class="upgrade-description">Увеличивает доход от всех источников</div>
+            </div>
+            <div>
+                <span class="upgrade-cost">100</span>
+                <span class="upgrade-level">Ур. 0</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Игровые переменные
+        let coins = 0;
+        let coinsPerClick = 1;
+        let coinsPerSecond = 0;
+        let multiplier = 1;
+        
+        // Уровни улучшений
+        let upgradeClickLevel = 0;
+        let upgradeAutoLevel = 0;
+        let upgradeMultiplierLevel = 0;
+        
+        // Стоимость улучшений
+        const upgradeClickCost = 10;
+        const upgradeAutoCost = 50;
+        const upgradeMultiplierCost = 100;
+        
+        // Элементы DOM
+        const coinsElement = document.getElementById('coins');
+        const coinsPerClickElement = document.getElementById('coins-per-click');
+        const coinsPerSecondElement = document.getElementById('coins-per-second');
+        const clickerElement = document.getElementById('clicker');
+        const upgradeClickElement = document.getElementById('upgrade-click');
+        const upgradeAutoElement = document.getElementById('upgrade-auto');
+        const upgradeMultiplierElement = document.getElementById('upgrade-multiplier');
+        
+        // Функция показа уведомления
+        function showNotification(message, icon = '✨') {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = 
+                <div class="notification-icon">${icon}</div>
+                <div>${message}</div>
+            ;
+            
+            document.body.appendChild(notification);
+            
+            // Показываем уведомление
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // Скрываем уведомление через 3 секунды
+            setTimeout(() => {
+                notification.classList.remove('show');
+                notification.classList.add('hide');
+                
+                // Удаляем уведомление из DOM после анимации
+                setTimeout(() => {
+                    notification.remove();
+                }, 500);
+            }, 3000);
+        }
+        
+        // Функция клика
+        function handleClick(event) {
+            // Добавляем монеты
+            coins += coinsPerClick * multiplier;
+            updateUI();
+            
+            // Создаем анимацию кликаcreateClickAnimation(event);
+            
+            // Создаем анимацию монеты
+            createCoinAnimation();
+            
+            // Показываем уведомление при достижении определенных уровней монет
+            if (coins >= 100 && coins - coinsPerClick * multiplier < 100) {
+                showNotification('Вы достигли 100 монет! 🎉', '🎉');
+            } else if (coins >= 500 && coins - coinsPerClick * multiplier < 500) {
+                showNotification('500 монет! Вы на правильном пути! 🚀', '🚀');
+            } else if (coins >= 1000 && coins - coinsPerClick * multiplier < 1000) {
+                showNotification('1000 монет! Невероятно! 🌟', '🌟');
+            }
+        }
+        
+        // Создание анимации клика
+        function createClickAnimation(event) {
+            const rect = clickerElement.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+            const animation = document.createElement('div');
+            animation.className = 'click-animation';
+            animation.style.left = ${x}px;
+            animation.style.top = ${y}px;
+            
+            clickerElement.appendChild(animation);
+            
+            // Удаляем анимацию после завершения
+            setTimeout(() => {
+                animation.remove();
+            }, 500);
+        }
+        
+        // Создание анимации монеты
+        function createCoinAnimation() {
+            const coin = document.createElement('div');
+            coin.className = 'coin-animation';
+            
+            // Случайная позиция на кликере
+            const x = Math.random() * 160 + 20;
+            const y = Math.random() * 160 + 20;
+            
+            coin.style.left = ${x}px;
+            coin.style.top = ${y}px;
+            
+            clickerElement.appendChild(coin);
+            
+            // Удаляем анимацию после завершения
+            setTimeout(() => {
+                coin.remove();
+            }, 1500);
+        }
+        
+        // Покупка улучшения клика
+        function buyUpgradeClick() {
+            const cost = upgradeClickCost * Math.pow(1.5, upgradeClickLevel);
+            
+            if (coins >= cost) {
+                coins -= cost;
+                upgradeClickLevel++;
+                coinsPerClick = 1 + upgradeClickLevel;
+                
+                updateUI();
+                updateUpgradeUI();
+                
+                // Показываем уведомление
+                showNotification(Уровень усиленного клика повышен! ✨, '✨');
+            }
+        }
+        
+        // Покупка авто-кликера
+        function buyUpgradeAuto() {
+            const cost = upgradeAutoCost * Math.pow(1.8, upgradeAutoLevel);
+            
+            if (coins >= cost) {
+                coins -= cost;
+                upgradeAutoLevel++;
+                coinsPerSecond = upgradeAutoLevel;
+                
+                updateUI();
+                updateUpgradeUI();
+                
+                // Показываем уведомление
+                showNotification(Авто-кликер улучшен! 🥳, '🥳');
+            }
+        }
+        
+        // Покупка множителя
+        function buyUpgradeMultiplier() {
+            const cost = upgradeMultiplierCost * Math.pow(2, upgradeMultiplierLevel);
+            
+            if (coins >= cost) {
+                coins -= cost;
+                upgradeMultiplierLevel++;
+                multiplier = 1 + upgradeMultiplierLevel * 0.5;
+                
+                updateUI();
+                updateUpgradeUI();
+                
+                // Показываем уведомление
+                showNotification(Множитель увеличен! 🎊, '🎊');
+            }
+        }
+        
+        // Обновление интерфейса
+        function updateUI() {coinsElement.textContent = Math.floor(coins);
+            coinsPerClickElement.textContent = coinsPerClick * multiplier;
+            coinsPerSecondElement.textContent = coinsPerSecond * multiplier;
+        }
+        
+        // Обновление интерфейса улучшений
+        function updateUpgradeUI() {
+            // Обновляем улучшение клика
+            const clickCost = upgradeClickCost * Math.pow(1.5, upgradeClickLevel);
+            upgradeClickElement.querySelector('.upgrade-cost').textContent = Math.floor(clickCost);
+            upgradeClickElement.querySelector('.upgrade-level').textContent = Ур. ${upgradeClickLevel};
+            
+            // Обновляем авто-кликер
+            const autoCost = upgradeAutoCost * Math.pow(1.8, upgradeAutoLevel);
+            upgradeAutoElement.querySelector('.upgrade-cost').textContent = Math.floor(autoCost);
+            upgradeAutoElement.querySelector('.upgrade-level').textContent = Ур. ${upgradeAutoLevel};
+            
+            // Обновляем множитель
+            const multiplierCost = upgradeMultiplierCost * Math.pow(2, upgradeMultiplierLevel);
+            upgradeMultiplierElement.querySelector('.upgrade-cost').textContent = Math.floor(multiplierCost);
+            upgradeMultiplierElement.querySelector('.upgrade-level').textContent = Ур. ${upgradeMultiplierLevel};
+            
+            // Проверяем, можем ли купить улучшения
+            upgradeClickElement.classList.toggle('disabled', coins < clickCost);
+            upgradeAutoElement.classList.toggle('disabled', coins < autoCost);
+            upgradeMultiplierElement.classList.toggle('disabled', coins < multiplierCost);
+        }
+        
+        // Автоматическое начисление монет
+        function autoGenerateCoins() {
+            coins += coinsPerSecond * multiplier / 10; // Делаем 10 раз в секунду для плавности
+            updateUI();
+            updateUpgradeUI();
+        }
+        
+        // Инициализация игры
+        function init() {
+            // Добавляем обработчики событий
+            clickerElement.addEventListener('click', handleClick);
+            upgradeClickElement.addEventListener('click', buyUpgradeClick);
+            upgradeAutoElement.addEventListener('click', buyUpgradeAuto);
+            upgradeMultiplierElement.addEventListener('click', buyUpgradeMultiplier);
+            
+            // Запускаем автоматическое начисление монет
+            setInterval(autoGenerateCoins, 100);
+            
+            // Первоначальное обновление интерфейса
+            updateUI();
+            updateUpgradeUI();
+        }
+        
+        // Запускаем игру при загрузке страницы
+        window.onload = init;
+    </script>
+</body>
+</html>
+        
+        .upgrade-item {
